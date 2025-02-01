@@ -40,11 +40,31 @@ const useSignalR = (hubUrl: string) => {
       }
     }
   };
+  const sendFilterGroups = async (user: string, message: string) => {
+    if (connection) {
+      try {
+        await connection.invoke("SendFilterGroups", user, message);
+      } catch (error) {
+        console.error("sendFilterGroups Error:", error);
+      }
+    }
+  };
+  const sendPaginationInfo = async (paginationInfo: object) => {
+    if (connection) {
+      try {
+        await connection.invoke("SendPaginationInfo", paginationInfo);
+      } catch (error) {
+        console.error("sendFilterGroups Error:", error);
+      }
+    }
+  };
   return { 
     messages, 
     sendTableExportData, 
     connection, 
     sendUserInForm,
+    sendFilterGroups,
+    sendPaginationInfo,
    };
 };
 

@@ -14,8 +14,15 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 
 // import useSignalR from '@/hooks/useSignalR';
 registerAllModules();
+
+interface TableRow {
+  [key: string]: any; // Dành cho các thuộc tính dữ liệu động
+  readonly?: boolean; // Thêm thuộc tính readonly
+  [key: number]: any; // Dành cho các cột dữ liệu
+}
+
 interface ChildProps {
-  tableData: any[][];
+  tableData: TableRow[];
   blurCell: (msg:string) => void;
   columns: any[];
 }
@@ -35,7 +42,7 @@ const ExcelForm: React.FC<ChildProps> = ({tableData, blurCell, columns}) => {
         ref={hotTableRef}
         data={tableData} // Tạo dữ liệu mẫu
         colHeaders={columns.filter(col => col.type != "Action").map((col) => col.title)}
-        columns={columns.filter(col => col.type != "Action").map(col => ({ data: col.dataField, title: col.title, renderer: col.renderer }))}
+        columns={columns.filter(col => col.type != "Action").map(col => ({ data: col.dataField, title: col.title, renderer: col.renderer, type: col.dataType, dateFormat: 'DD/MM/YYYY' }))}
         contextMenu={[
           "cut",
           "copy",
@@ -83,6 +90,16 @@ const ExcelForm: React.FC<ChildProps> = ({tableData, blurCell, columns}) => {
         autoWrapCol={true}
         manualRowResize={true}
         navigableHeaders={true}
+        cells={(row, col) => {
+          const cellProperties = {} as Handsontable.CellProperties;
+      
+          // Kiểm tra giá trị readonly trong tableData
+          if (tableData[row] && tableData[row].readonly) {
+            cellProperties.readOnly = true; // Disable toàn bộ hàng nếu readonly = true
+          }
+      
+          return cellProperties;
+        }}
       >
       </HotTable>
       <HotTable

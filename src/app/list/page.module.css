@@ -20,7 +20,11 @@
     font-size: 24px;
     font-weight: 500;
 }
+.leftTitle{
+    display: flex;
+    gap: 10px;
 
+}
 .actions {
     display: flex;
     gap: 10px;
